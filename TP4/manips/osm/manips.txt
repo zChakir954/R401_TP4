@@ -1,0 +1,95 @@
+  
+Extension : Carte Openstreetmap
+
+a. Dépendances :
+
+	// OSM
+	implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '5.0.0-alpha.16'
+  implementation 'org.json:json:20210307'
+  implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.14.2")
+  
+3.b. Le code OSM pour accueil.html est donné.
+
+3.c Classe services
+
+- Les imports :
+
+/* 
+ * OSM
+ */
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.springframework.stereotype.Service; 
+
+import java.io.IOException;
+
+- Attribut : httpCLient : finale, de type OkHttpClient
+  - Créer une instance pour l'attribut dans le constructeur de la classe.
+  
+- La méthode "search" est requise : Elle est donnée 
+
+  /*
+   * OSM
+   */
+    public JSONObject search(String query) throws IOException {
+        Request request = new Request.Builder()
+            .url("https://nominatim.openstreetmap.org/search?format=json&q=" + query)
+            .build();
+
+        try (Response response = httpClient.newCall(request).execute()) {
+            if (!response.isSuccessful()) 
+              System.out.println("\n\tUnexpected code " + response);
+
+            JSONArray jsonArray = new JSONArray(response.body().string());
+
+            if(jsonArray.length() > 0) {
+                return jsonArray.getJSONObject(0);
+            }
+
+            return null;
+        } 
+    }
+    
+3.d. La classe Controleur
+
+- Les imports 
+
+/*
+ * OSM
+ */
+import org.json.JSONObject;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import java.io.IOException;
+
+- Point de contrôle : A compléter.
+
+/*
+ * OSM
+ */
+ 
+   @PostMapping("/search")
+    public String search(@RequestParam("query") String query, Model model) {
+        JSONObject location;
+        try {
+            location = services.search(query);
+            System.out.println("\n\tlocation : "+location);
+            String lat = ...;
+            String lon = ...;
+            double dlat = valeur double de lat;
+            double dlon = valeur double de lon;
+            model.addAttribute("latitude", dlat);
+            model.addAttribute("longitude", dlon);
+            
+            System.out.println("\n\tlocation : "+dlat);
+            System.out.println("\n\tlocation : "+dlon);
+            
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "accueil";
+    }
+    

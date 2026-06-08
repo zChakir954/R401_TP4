@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="ISO-8859-1">
+    <title>Accueil</title>
+    <link rel="shortcut icon" href="/images/favicon.ico">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <style>
+        #map {
+          height: 600px;
+          border: 2px blue solid;
+          background-color: green;
+        }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>L'echo des BD ...</h1>
+      <hr>
+      <article>
+        <h2>Où chercher ...</h2>
+        <form th:action="@{/search}" method="post">
+          <input type="text" name="query" placeholder="Trouver un lieu" required>
+          <input type="submit" value="Search">
+        </form>
+        <div id="map" style="height: 400px;"></div>
+      </article>
+    </div>
+
+    <script th:inline="javascript">
+      /*<![CDATA[*/
+        var map = L.map('map').setView([48.8566, 2.3522], 13);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        L.marker([48.9561507, 2.341262599]).addTo(map)
+            .bindPopup('Sorbonne Paris Nord')
+            .openPopup();
+
+        var lat = [[${latitude}]];
+        var lon = [[${longitude}]];
+        map.setView([lat, lon], 13);
+        L.marker([lat, lon]).addTo(map).bindPopup('Votre position');
+      /*]]>*/
+    </script>
+  </body>
+</html>

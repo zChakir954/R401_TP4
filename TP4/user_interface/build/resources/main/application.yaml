@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: user_interface
+spring.application.name: user_interface
+server.port: 8090
+spring.mvc.favicon.enabled: false
